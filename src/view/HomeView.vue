@@ -5,7 +5,7 @@
   </div>
   <div>
     <div class="tools-bar">
-      <Button color="#08C18A">新增任务</Button>
+      <Button color="#08C18A" @click="hide()">新增任务</Button>
     </div>
     <List
       v-model:loading="loading"
@@ -17,22 +17,27 @@
     </List>
   </div>
 
-  <Popup>
-    <TaskForm/>
+  <Popup v-model:show="showPopup" style="border-radius: 5px">
+    <TaskForm @add="hide()" />
   </Popup>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, Ref } from "vue";
-import { List, Button } from "vant";
+import { List, Button, Popup } from "vant";
 import Card from "@/components/Card.vue";
-import Popup from "@/components/Popup.vue";
 import TaskForm from "@/components/TaskForm.vue";
 
 const list: Ref<Array<any>> = ref([]);
 const loading = ref(false);
 const finished = ref(false);
-const a=()=>{console.log("asas")}
+
+const showPopup = ref(false);
+
+function hide() {
+  showPopup.value = !showPopup.value;
+}
+
 const onLoad = () => {
   // 异步更新数据
   // setTimeout 仅做示例，真实场景中一般为 ajax 请求
@@ -54,7 +59,7 @@ const onLoad = () => {
 
 <style>
 .banner {
-  margin: 3vh 10vw 0 10vw;
+  margin: 3vh 5vw 1vh 5vw;
   padding-bottom: 1vh;
   display: flex;
   flex-direction: row;

@@ -2,7 +2,10 @@
   <div class="card-panel">
     <div class="icon">
       <img v-if="props.process.status == 2" src="@/assets/finish.gif" />
-      <img v-else-if="props.process.status == 1" src="@/assets/processing.gif" />
+      <img
+        v-else-if="props.process.status == 1"
+        src="@/assets/processing.gif"
+      />
       <img v-else src="@/assets/waiting.gif" />
     </div>
     <div class="content">
@@ -10,8 +13,18 @@
       <div class="describe">
         {{ props.process.describe }}
       </div>
-      <div class="handler">
-        <img style="width: 25px" src="@/assets/more.svg" />
+      <div class="handle">
+        <Popover
+          v-model:show="showPopover"
+          :actions="[{ text: '编辑' }, { text: '编辑' }]"
+          @select="() => {}"
+        >
+          <template #reference>
+            <div @click="showPopoverFunc()">
+              <img style="width: 25px" src="@/assets/more.svg" />
+            </div>
+          </template>
+        </Popover>
       </div>
     </div>
   </div>
@@ -19,16 +32,22 @@
 
 <script setup lang="ts">
 import { ref, reactive, defineProps } from "vue";
+import { Popover } from "vant";
 const props = defineProps(["process"]);
+const showPopover = ref(false);
+function showPopoverFunc() {
+  console.log("s");
+  showPopover.value = true;
+}
 </script>
 
 <style>
 .card-panel {
   width: 80%;
-  min-height: 25vw;
+  min-height: 20vh;
   margin: 2% 10%;
-  border: 1px solid #ffffff;
-  background-color: #ffffff;
+  border: 1px solid #f8f9fd;
+  background-color: #f8f9fd;
   box-shadow: 1px 3px 4px 1px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
 
@@ -49,7 +68,7 @@ const props = defineProps(["process"]);
 }
 
 .card-panel .content {
-  min-height: 20vw;
+  min-height: 10vh;
   width: 80%;
   text-align: left;
   padding: 5% 3%;
@@ -70,7 +89,7 @@ const props = defineProps(["process"]);
   line-height: 18px;
 }
 
-.card-panel .content .handler {
+.card-panel .content .handle {
   display: flex;
   justify-content: flex-end;
   bottom: 1px;

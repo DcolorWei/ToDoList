@@ -12,18 +12,20 @@
 </template>
 
 <script setup lang="ts">
-import { reactive,defineEmits } from "vue";
+import { reactive, defineEmits } from "vue";
 
-const emit = defineEmits(["subi"]);
+const emits = defineEmits(["add"]);
 const form = reactive({
   taskName: "",
   taskContent: "",
   taskStatus: 0,
 });
-const cancel = () => {};
+const cancel = () => {
+  emits("add");
+};
 const confirm = () => {
-  console.log(form);
-  emit("subi",form);
+  console.log(form)
+  emits("add", form);
 };
 </script>
 
@@ -34,7 +36,7 @@ const confirm = () => {
   justify-content: center;
   align-items: flex-start;
   padding: 0 12vw;
-  height: 80%;
+  height: 65%;
 }
 
 .form label {
@@ -52,11 +54,39 @@ const confirm = () => {
   padding-left: 6px;
 }
 .form input {
-  height: 30px;
+  height: 24px;
 }
 
 .form textarea {
   height: 80px;
   padding-top: 3px;
+}
+
+.handler {
+  display: flex;
+  flex-direction: row;
+  margin: 20px auto;
+  width: 60%;
+  height: 35%;
+  justify-content: space-between;
+  align-items: center;
+}
+.handler div {
+  width: 60px;
+  height: 20px;
+  padding: 6px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.handler div:nth-child(1) {
+  background-color: #9d9d9d;
+  color: #fff;
+}
+.handler div:nth-child(2) {
+  background-color: #07c189;
+  color: #fff;
 }
 </style>
