@@ -5,7 +5,7 @@
   </div>
   <div>
     <div class="tools-bar">
-      <Button color="#08C18A" @click="hide()">新增任务</Button>
+      <Button color="#08C18A" @click="(e) => hide(e)">新增任务</Button>
     </div>
     <List
       v-model:loading="loading"
@@ -18,12 +18,13 @@
   </div>
 
   <Popup v-model:show="showPopup" style="border-radius: 5px">
-    <TaskForm @add="hide()" />
+    <TaskForm @add="(e) => hide(e)" />
   </Popup>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, Ref } from "vue";
+import axios from "axios";
 import { List, Button, Popup } from "vant";
 import Card from "@/components/Card.vue";
 import TaskForm from "@/components/TaskForm.vue";
@@ -34,26 +35,55 @@ const finished = ref(false);
 
 const showPopup = ref(false);
 
-function hide() {
+function hide(e: { taskName: string; taskContent: string; taskStatus: 0 }) {
   showPopup.value = !showPopup.value;
+  if (e && e.taskName && e.taskContent) {
+    axios({
+      url: "http://122.9.107.17:39443/v3/task",
+      method: "POST",
+      data: e,
+    }).then(() => {
+      getData();
+    });
+  }
 }
 
 const onLoad = () => {
-  // 异步更新数据
-  // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-  setTimeout(() => {
-    list.value.push({
-      status: Math.floor(Math.random() * 100) % 3,
-      title: "标题bug" + Math.floor(Math.random() * 100),
-      describe: Math.random() * 10000000,
-    });
+  getData();
+};
+
+const getData = () => {
+  loading.value = true;
+  finished.value = false;
+  list.value = [];
+  axios({
+    url: "http://122.9.107.17:39443/v3/task",
+  }).then((res) => {
+    console.log(res.data);
+    res.data.forEach(
+      (i: {
+        id: number;
+        taskName: string;
+        status: 0 | 1 | 2;
+        taskContent1?: string;
+        taskContent2?: string;
+        taskContent3?: string;
+        createTime: string;
+      }) => {
+        list.value.push({
+          status: i.status,
+          title: i.taskName,
+          describe:
+            i.taskContent1 || "" + i.taskContent2 || "" + i.taskContent3 || "",
+          createTime:
+            i.createTime.replace("T", " ").replace("Z", "").slice(0, 16) + " ",
+        });
+      }
+    );
     // 加载状态结束
     loading.value = false;
-    // 数据全部加载完成
-    if (list.value.length >= 5) {
-      finished.value = true;
-    }
-  }, 3000);
+    finished.value = true;
+  });
 };
 </script>
 

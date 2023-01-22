@@ -14,17 +14,15 @@
         {{ props.process.describe }}
       </div>
       <div class="handle">
-        <Popover
+        <!-- <Popover
           v-model:show="showPopover"
           :actions="[{ text: '编辑' }, { text: '编辑' }]"
           @select="() => {}"
         >
-          <template #reference>
-            <div @click="showPopoverFunc()">
-              <img style="width: 25px" src="@/assets/more.svg" />
-            </div>
-          </template>
-        </Popover>
+          <template #reference> -->
+        <div>{{ props.process.createTime }}</div>
+        <!-- </template>
+        </Popover> -->
       </div>
     </div>
   </div>
@@ -46,8 +44,8 @@ function showPopoverFunc() {
   width: 80%;
   min-height: 20vh;
   margin: 2% 10%;
-  border: 1px solid #f8f9fd;
-  background-color: #f8f9fd;
+  border: 1px solid #fff;
+  background-color: #fff;
   box-shadow: 1px 3px 4px 1px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
 
@@ -71,7 +69,7 @@ function showPopoverFunc() {
   min-height: 10vh;
   width: 80%;
   text-align: left;
-  padding: 5% 3%;
+  padding: 5% 3% 1.5% 3%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -92,6 +90,9 @@ function showPopoverFunc() {
 .card-panel .content .handle {
   display: flex;
   justify-content: flex-end;
+  line-height: 40px;
   bottom: 1px;
+  font-size: 0.9em;
+  height: 40px;
 }
 </style>
