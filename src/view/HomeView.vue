@@ -13,7 +13,12 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <Card v-for="item in list" :key="item" :process="item" />
+      <Card
+        v-for="item in list"
+        :key="item"
+        :process="item"
+        @updatetask="(e) => update(e)"
+      />
     </List>
   </div>
 
@@ -48,6 +53,14 @@ function hide(e: { taskName: string; taskContent: string; taskStatus: 0 }) {
   }
 }
 
+function update(taskid: number) {
+  axios({
+    url: `http://122.9.107.17:39443/v3/task`,
+    method: "PUT",
+    data: { id: taskid },
+  }).then(() => getData());
+}
+
 const onLoad = () => {
   getData();
 };
@@ -55,11 +68,10 @@ const onLoad = () => {
 const getData = () => {
   loading.value = true;
   finished.value = false;
-  list.value = [];
   axios({
     url: "http://122.9.107.17:39443/v3/task",
   }).then((res) => {
-    console.log(res.data);
+    list.value = [];
     res.data.forEach(
       (i: {
         id: number;
@@ -71,6 +83,7 @@ const getData = () => {
         createTime: string;
       }) => {
         list.value.push({
+          id: i.id,
           status: i.status,
           title: i.taskName,
           describe:

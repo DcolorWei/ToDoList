@@ -1,42 +1,37 @@
 <template>
   <div class="card-panel">
-    <div class="icon">
-      <img v-if="props.process.status == 2" src="@/assets/finish.gif" />
-      <img
-        v-else-if="props.process.status == 1"
-        src="@/assets/processing.gif"
-      />
-      <img v-else src="@/assets/waiting.gif" />
+    <div class="icon" v-if="props.process.status == 2">
+      <img src="@/assets/finish.gif" />
+      <div>已完成</div>
+    </div>
+    <div class="icon" v-else-if="props.process.status == 1" @click="update()">
+      <img src="@/assets/processing.gif" />
+      <div>推进中</div>
+    </div>
+    <div class="icon" v-else @click="update()">
+      <img src="@/assets/waiting.gif" />
+      <div>待进行</div>
     </div>
     <div class="content">
       <div class="title">{{ props.process.title }}</div>
       <div class="describe">
         {{ props.process.describe }}
       </div>
-      <div class="handle">
-        <!-- <Popover
-          v-model:show="showPopover"
-          :actions="[{ text: '编辑' }, { text: '编辑' }]"
-          @select="() => {}"
-        >
-          <template #reference> -->
-        <div>{{ props.process.createTime }}</div>
-        <!-- </template>
-        </Popover> -->
-      </div>
+      <div class="handle">{{ props.process.createTime }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, defineProps } from "vue";
-import { Popover } from "vant";
 const props = defineProps(["process"]);
-const showPopover = ref(false);
-function showPopoverFunc() {
-  console.log("s");
-  showPopover.value = true;
-}
+const emits = defineEmits(["updatetask"]);
+
+const update = () => {
+  if (confirm(`修改进度为：${props.process.status ? "已完成" : "推进中"}？`)) {
+    emits("updatetask", props.process.id);
+  }
+};
 </script>
 
 <style>
@@ -56,9 +51,13 @@ function showPopoverFunc() {
 
 .card-panel .icon {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 20%;
+
+  font-size: 0.85em;
+  color: #7d7d7d;
 }
 
 .card-panel .icon img {

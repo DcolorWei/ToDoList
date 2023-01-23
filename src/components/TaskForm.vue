@@ -24,7 +24,6 @@ const cancel = () => {
   emits("add");
 };
 const confirm = () => {
-  console.log(form)
   emits("add", form);
 };
 </script>
