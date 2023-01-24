@@ -72,27 +72,19 @@ const getData = () => {
     url: "http://122.9.107.17:39443/v3/task",
   }).then((res) => {
     list.value = [];
-    res.data.forEach(
-      (i: {
-        id: number;
-        taskName: string;
-        status: 0 | 1 | 2;
-        taskContent1?: string;
-        taskContent2?: string;
-        taskContent3?: string;
-        createTime: string;
-      }) => {
-        list.value.push({
-          id: i.id,
-          status: i.status,
-          title: i.taskName,
-          describe:
-            i.taskContent1 || "" + i.taskContent2 || "" + i.taskContent3 || "",
-          createTime:
-            i.createTime.replace("T", " ").replace("Z", "").slice(0, 16) + " ",
-        });
-      }
-    );
+    res.data.forEach((i: any) => {
+      list.value.push({
+        id: i.id,
+        status: i.status,
+        title: i.taskName,
+        describe:
+          i.taskContent1 || "" + i.taskContent2 || "" + i.taskContent3 || "",
+        createTime:
+          i.createTime.replace("T", " ").replace("Z", "").slice(0, 16) + " ",
+        target: i.target,
+        current: i.current,
+      });
+    });
     // 加载状态结束
     loading.value = false;
     finished.value = true;

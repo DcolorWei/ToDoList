@@ -1,5 +1,5 @@
 <template>
-  <div class="card-panel">
+  <div v-if="!props.process.target" class="card-panel">
     <div class="icon" v-if="props.process.status == 2">
       <img src="@/assets/finish.gif" />
       <div>已完成</div>
@@ -20,10 +20,32 @@
       <div class="handle">{{ props.process.createTime }}</div>
     </div>
   </div>
+  <div v-else="props.process.target" class="card-panel">
+    <div class="icon" v-if="props.process.status == 2">
+      <img src="@/assets/finish.gif" />
+      <div>已完成</div>
+    </div>
+    <div class="icon" v-else-if="props.process.status == 1">
+      <img src="@/assets/processing.gif" />
+      <div>进行中</div>
+    </div>
+    <div class="icon" v-else>
+      <img src="@/assets/waiting.gif" />
+      <div>未开始</div>
+    </div>
+    <div class="content">
+      <div class="title">{{ props.process.title }}</div>
+      <div class="describe">目标：连续打卡 {{ props.process.target }} 天</div>
+      <div class="handle">
+        已坚持 {{ props.process.current||0 }} 天
+        <div @click="punch()">打卡</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, defineProps } from "vue";
+import { ref, reactive, defineProps, onMounted } from "vue";
 const props = defineProps(["process"]);
 const emits = defineEmits(["updatetask"]);
 
@@ -32,6 +54,14 @@ const update = () => {
     emits("updatetask", props.process.id);
   }
 };
+
+const punch = () => {
+  if (confirm(`打卡！`)) {
+    emits("updatetask", props.process.id);
+  }
+};
+
+onMounted(() => console.log(props.process));
 </script>
 
 <style>
@@ -89,9 +119,23 @@ const update = () => {
 .card-panel .content .handle {
   display: flex;
   justify-content: flex-end;
-  line-height: 40px;
+  align-items: center;
   bottom: 1px;
-  font-size: 0.9em;
+  font-weight: 600;
   height: 40px;
+}
+
+.handle div {
+  width: 40px;
+  height: 20px;
+  padding: 6px;
+  border-radius: 5px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #07c189;
+  color: #fff;
+  margin-left: 10px;
 }
 </style>
