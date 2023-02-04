@@ -20,7 +20,7 @@
       <div class="handle">{{ props.process.createTime }}</div>
     </div>
   </div>
-  <div v-else="props.process.target" class="card-panel">
+  <div v-else class="card-panel">
     <div class="icon" v-if="props.process.status == 2">
       <img src="@/assets/finish.gif" />
       <div>已完成</div>
